@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./index.css" />
+    <title>Movie List</title>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>MOVIE LIST INFORMATION</h1>
+      </header>
+      <form id="movie-form">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input id="title" type="text" />
+        </div>
+        <div class="form-group">
+          <label for="director">Director</label>
+          <input id="director" type="text" />
+        </div>
+        <div class="form-group">
+          <label for="release">Year release</label>
+          <input id="release" type="text" />
+        </div>
+        <button class="btn btn-primary" type="submit">Add Movie</button>
+      </form>
+      <table>
+        <caption>
+          Movie Lists
+        </caption>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Director</th>
+            <th>Year release</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="movie-list"></tbody>
+      </table>
+    </div>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
