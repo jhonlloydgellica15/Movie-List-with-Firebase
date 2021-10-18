@@ -1,44 +1,19 @@
-//State
-class Movie {
-  constructor(title, director, yrRelease) {
-    this.title = title;
-    this.director = director;
-    this.yrRelease = yrRelease;
-  }
-}
-
+//Class
 class MovieUI {
   static displayMovie() {
-    const storedMovies = [
-      {
-        title: "Superman",
-        director: "Coco Martin",
-        yrRelease: "2018",
-      },
-      {
-        title: "Batman",
-        director: "Coco Martin",
-        yrRelease: "2018",
-      },
-      {
-        title: "Dora",
-        director: "Coco Martin",
-        yrRelease: "2018",
-      },
-    ];
-
-    const movies = storedMovies;
-    movies.forEach((movie) => MovieUI.addMovieList(movie));
+    //Fetching realtime data from firebase and pass to render method addMovieList
+    firebaseStorage.realtimeListener();
   }
 
   static addMovieList(movie) {
     const listMovie = document.querySelector("#movie-list");
     const row = document.createElement("tr");
 
+    row.setAttribute("data-id", movie.id);
     row.innerHTML = `
-        <td>${movie.title}</td>
-        <td>${movie.director}</td>
-        <td>${movie.yrRelease}</td>
+        <td>${movie.data().title}</td>
+        <td>${movie.data().director}</td>
+        <td>${movie.data().release}</td>
         <td><a class="btn btn-danger remove">Delete</a></td>
     `;
     listMovie.appendChild(row);
@@ -48,12 +23,6 @@ class MovieUI {
     document.querySelector("#title").value = "";
     document.querySelector("#director").value = "";
     document.querySelector("#release").value = "";
-  }
-
-  static removeMovie(element) {
-    if (element.classList.contains("remove")) {
-      element.parentElement.parentElement.remove();
-    }
   }
 
   static showAlert(message, className) {
@@ -68,6 +37,34 @@ class MovieUI {
     setTimeout(() => document.querySelector(".alert").remove(), 2000);
   }
 }
+class firebaseStorage {
+  static realtimeListener() {
+    let movieList = document.querySelector("#movie-list");
+    db.collection("movies")
+      .orderBy("title")
+      .onSnapshot((snapshot) => {
+        let changes = snapshot.docChanges();
+        changes.forEach((change) => {
+          if (change.type == "added") MovieUI.addMovieList(change.doc);
+          else if (change.type == "removed") {
+            let tr = document.querySelector(`[data-id=${change.doc.id}]`);
+            movieList.removeChild(tr);
+          }
+        });
+      });
+  }
+  static addMovie(title, director, release) {
+    db.collection("movies").add({
+      title,
+      director,
+      release,
+    });
+  }
+
+  static removeMovie(id) {
+    db.collection("movies").doc(id).delete();
+  }
+}
 
 //Events
 //Display when load
@@ -76,7 +73,6 @@ document.addEventListener("DOMContentLoaded", MovieUI.displayMovie);
 //Add movie
 document.querySelector("#movie-form").addEventListener("submit", (e) => {
   e.preventDefault();
-
   //Get value of input text
   const title = document.querySelector("#title").value;
   const director = document.querySelector("#director").value;
@@ -87,10 +83,7 @@ document.querySelector("#movie-form").addEventListener("submit", (e) => {
     MovieUI.showAlert("Please fill in all fields", "danger");
   } else {
     //Instantiate movie
-    const movie = new Movie(title, director, release);
-
-    //Add all value of input text on movie list UI
-    MovieUI.addMovieList(movie);
+    firebaseStorage.addMovie(title, director, release);
 
     MovieUI.showAlert("Movie Added", "success");
 
@@ -101,6 +94,7 @@ document.querySelector("#movie-form").addEventListener("submit", (e) => {
 
 //Remove data
 document.querySelector("#movie-list").addEventListener("click", (e) => {
-  MovieUI.removeMovie(e.target);
+  const id = e.target.parentElement.parentElement.getAttribute("data-id");
+  firebaseStorage.removeMovie(id);
   MovieUI.showAlert("Movie removed", "success");
 });

@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./index.css" />
+    <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase-firestore.js"></script>
     <title>Movie List</title>
   </head>
   <body>
@@ -43,6 +45,23 @@
       </table>
     </div>
 
+    <script>
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyByjBqzINANF8Cqh68YJJz53O6K2P-ZlBc",
+        authDomain: "movie-list-with-firebase-3e539.firebaseapp.com",
+        projectId: "movie-list-with-firebase-3e539",
+        storageBucket: "movie-list-with-firebase-3e539.appspot.com",
+        messagingSenderId: "863967380142",
+        appId: "1:863967380142:web:bdbad075fd0d9cf693233f",
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      const db = firebase.firestore();
+      db.settings({ timestampsInSnapshots: true });
+    </script>
     <script src="./app.js"></script>
   </body>
 </html>
