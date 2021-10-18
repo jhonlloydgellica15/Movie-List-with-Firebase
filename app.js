@@ -19,10 +19,10 @@ class MovieUI {
     listMovie.appendChild(row);
   }
 
-  static clearFields() {
-    document.querySelector("#title").value = "";
-    document.querySelector("#director").value = "";
-    document.querySelector("#release").value = "";
+  static clearFields(inputs) {
+    inputs.forEach((input) => {
+      document.querySelector(`#${input}`).value = "";
+    });
   }
 
   static showAlert(message, className) {
@@ -77,6 +77,7 @@ document.querySelector("#movie-form").addEventListener("submit", (e) => {
   const title = document.querySelector("#title").value;
   const director = document.querySelector("#director").value;
   const release = document.querySelector("#release").value;
+  const inputArr = ["title", "director", "release"];
 
   //Validate fields
   if (title === "" || director === "" || release === "") {
@@ -88,7 +89,7 @@ document.querySelector("#movie-form").addEventListener("submit", (e) => {
     MovieUI.showAlert("Movie Added", "success");
 
     //Clear all fields
-    MovieUI.clearFields();
+    MovieUI.clearFields(inputArr);
   }
 });
 
