@@ -62,7 +62,10 @@ class firebaseStorage {
   }
 
   static removeMovie(id) {
-    db.collection("movies").doc(id).delete();
+    const getId = id.parentElement.parentElement.getAttribute("data-id");
+
+    if (id.classList.contains("remove"))
+      db.collection("movies").doc(getId).delete();
   }
 }
 
@@ -95,7 +98,6 @@ document.querySelector("#movie-form").addEventListener("submit", (e) => {
 
 //Remove data
 document.querySelector("#movie-list").addEventListener("click", (e) => {
-  const id = e.target.parentElement.parentElement.getAttribute("data-id");
-  firebaseStorage.removeMovie(id);
+  firebaseStorage.removeMovie(e.target);
   MovieUI.showAlert("Movie removed", "success");
 });
