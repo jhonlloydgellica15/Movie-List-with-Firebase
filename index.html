@@ -38,15 +38,34 @@
             <th>Title</th>
             <th>Director</th>
             <th>Year release</th>
-            <th>Action</th>
+            <th class="action">Action</th>
           </tr>
         </thead>
         <tbody id="movie-list"></tbody>
       </table>
-    </div>
+
+      <div class="modal-bg">
+        <div class="modal">
+          <span class="modal-close">X</span>
+          <form id="movie-form">
+            <div class="form-group">
+              <label for="modal-title">Title</label>
+              <input id="modal-title" type="text" />
+            </div>
+            <div class="form-group">
+              <label for="modal-director">Director</label>
+              <input id="modal-director" type="text" />
+            </div>
+            <div class="form-group">
+              <label for="modal-release">Year release</label>
+              <input id="modal-release" type="text" />
+            </div>
+            <button class="btn btn-primary" type="submit">Update Movie</button>
+          </form>
+        </div>
+      </div>
 
     <script>
-      // Your web app's Firebase configuration
       const firebaseConfig = {
         apiKey: "AIzaSyByjBqzINANF8Cqh68YJJz53O6K2P-ZlBc",
         authDomain: "movie-list-with-firebase-3e539.firebaseapp.com",

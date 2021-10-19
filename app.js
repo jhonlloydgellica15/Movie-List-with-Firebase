@@ -1,4 +1,5 @@
 //Class
+
 class MovieUI {
   static displayMovie() {
     //Fetching realtime data from firebase and pass to render method addMovieList
@@ -11,9 +12,10 @@ class MovieUI {
 
     row.setAttribute("data-id", movie.id);
     row.innerHTML = `
-        <td>${movie.data().title}</td>
-        <td>${movie.data().director}</td>
-        <td>${movie.data().release}</td>
+        <td class="tbl-title">${movie.data().title}</td>
+        <td class="tbl-director">${movie.data().director}</td>
+        <td class="tbl-release">${movie.data().release}</td>
+        <td class="edit"><a class="btn btn-primary update">Edit</a></td>
         <td><a class="btn btn-danger remove">Delete</a></td>
     `;
     listMovie.appendChild(row);
@@ -36,7 +38,36 @@ class MovieUI {
 
     setTimeout(() => document.querySelector(".alert").remove(), 2000);
   }
+
+  static showModal(el) {
+    const modalBg = document.querySelector(".modal-bg");
+    const modalContainer = document.querySelector(".modal");
+    //Getting value of unique row inside of table
+    const titleValue =
+      el.parentElement.parentElement.querySelector(".tbl-title").textContent;
+    const directorValue =
+      el.parentElement.parentElement.querySelector(".tbl-director").textContent;
+    const releaseValue =
+      el.parentElement.parentElement.querySelector(".tbl-release").textContent;
+    const docID = el.parentElement.parentElement.getAttribute("data-id");
+
+    if (el.classList.contains("update")) {
+      modalBg.classList.add("bg-active");
+
+      //Put value on modal
+      modalContainer.setAttribute("data-id", docID);
+      document.querySelector("#modal-title").value = titleValue;
+      document.querySelector("#modal-director").value = directorValue;
+      document.querySelector("#modal-release").value = releaseValue;
+    }
+  }
+
+  static closeModal() {
+    const modalBg = document.querySelector(".modal-bg");
+    modalBg.classList.remove("bg-active");
+  }
 }
+
 class firebaseStorage {
   static realtimeListener() {
     let movieList = document.querySelector("#movie-list");
@@ -64,8 +95,11 @@ class firebaseStorage {
   static removeMovie(id) {
     const getId = id.parentElement.parentElement.getAttribute("data-id");
 
-    if (id.classList.contains("remove"))
+    if (id.classList.contains("remove")) {
       db.collection("movies").doc(getId).delete();
+
+      MovieUI.showAlert("Movie removed", "success");
+    }
   }
 }
 
@@ -96,8 +130,22 @@ document.querySelector("#movie-form").addEventListener("submit", (e) => {
   }
 });
 
+//Open modal
+document.querySelector("#movie-list").addEventListener("click", (e) => {
+  MovieUI.showModal(e.target);
+});
+
+//Close modal
+document
+  .querySelector(".modal-close")
+  .addEventListener("click", MovieUI.closeModal);
+
+//Close modal for escape
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") MovieUI.closeModal();
+});
+
 //Remove data
 document.querySelector("#movie-list").addEventListener("click", (e) => {
   firebaseStorage.removeMovie(e.target);
-  MovieUI.showAlert("Movie removed", "success");
 });

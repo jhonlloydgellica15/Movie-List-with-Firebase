@@ -107,7 +107,9 @@ caption {
   text-align: left;
   font-size: 4rem;
 }
-
+table .edit {
+  width: 5px;
+}
 tr:nth-child(even) {
   background: rgba(236, 210, 210, 0.308);
 }
@@ -131,4 +133,46 @@ a {
 .alert-success {
   background: rgb(47, 116, 47);
   color: white;
+}
+
+/* Modal */
+.modal-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.5s;
+}
+.bg-active {
+  visibility: visible;
+  opacity: 1;
+}
+.modal {
+  background: #fff;
+  width: 50%;
+  height: 400px;
+  max-height: 100%;
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  margin-top: 10rem;
+  position: relative;
+}
+.modal-close {
+  position: absolute;
+  right: 2rem;
+  background: var(--primary-color);
+  border-radius: 50px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
 }
