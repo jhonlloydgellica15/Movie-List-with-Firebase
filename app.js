@@ -66,6 +66,20 @@ class MovieUI {
     const modalBg = document.querySelector(".modal-bg");
     modalBg.classList.remove("bg-active");
   }
+
+  static displayUpdatedData(doc) {
+    // <td class="tbl-title">${movie.data().title}</td>
+    //     <td class="tbl-director">${movie.data().director}</td>
+    //     <td class="tbl-release">${movie.data().release}</td>
+
+    const title = document.querySelector(".tbl-title");
+    const director = document.querySelector(".tbl-director");
+    const release = document.querySelector(".tbl-release");
+
+    title.textContent = doc.data().title;
+    director.textContent = doc.data().title;
+    release.textContent = doc.data().release;
+  }
 }
 
 class firebaseStorage {
@@ -77,8 +91,16 @@ class firebaseStorage {
         let changes = snapshot.docChanges();
         changes.forEach((change) => {
           if (change.type == "added") MovieUI.addMovieList(change.doc);
-          else if (change.type == "removed") {
-            let tr = document.querySelector(`[data-id=${change.doc.id}]`);
+
+          if (change.type == "modified") {
+            MovieUI.displayUpdatedData(change.doc);
+            MovieUI.closeModal();
+          }
+
+          if (change.type == "removed") {
+            let tr = document.querySelector(
+              '[data-id="' + change.doc.id + '"]'
+            );
             movieList.removeChild(tr);
           }
         });
@@ -100,6 +122,18 @@ class firebaseStorage {
 
       MovieUI.showAlert("Movie removed", "success");
     }
+  }
+
+  static updateMovie() {
+    const modalID = document.querySelector(".modal").getAttribute("data-id");
+    const title = document.querySelector("#modal-title").value;
+    const director = document.querySelector("#modal-director").value;
+    const release = document.querySelector("#modal-release").value;
+    db.collection("movies").doc(modalID).update({
+      title: title,
+      director: director,
+      release: release,
+    });
   }
 }
 
@@ -143,6 +177,11 @@ document
 //Close modal for escape
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") MovieUI.closeModal();
+});
+
+document.querySelector(".modal").addEventListener("submit", (e) => {
+  e.preventDefault();
+  firebaseStorage.updateMovie();
 });
 
 //Remove data
